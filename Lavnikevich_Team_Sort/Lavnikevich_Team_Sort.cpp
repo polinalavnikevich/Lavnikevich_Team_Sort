@@ -82,7 +82,7 @@ Node<T>* copyList(Node<T>* head) {
     return newHead;
 }
 
-// Тестирование сортировки с точным замером времени
+// Тестирование сортировки с замером времени
 template <typename T>
 void testSort(const string& name, Node<T>* (*sortFunc)(Node<T>*), Node<T>* head) {
     Node<T>* copy = copyList(head);
@@ -99,6 +99,47 @@ void testSort(const string& name, Node<T>* (*sortFunc)(Node<T>*), Node<T>* head)
 
     freeList(copy);
 }
+
+//Aksinya
+
+template <typename T>
+Node<T>* merge(Node<T>* a, Node<T>* b) {
+    if (!a) return b;
+    if (!b) return a;
+
+    Node<T>* result = nullptr;
+    Node<T>* tail = nullptr;
+
+    while (a && b) {
+        Node<T>* smaller;
+        if (a->data <= b->data) {
+            smaller = a;
+            a = a->next;
+        }
+        else {
+            smaller = b;
+            b = b->next;
+        }
+
+        smaller->next = nullptr;
+        if (!result) result = smaller;
+        else tail->next = smaller;
+        tail = smaller;
+    }
+
+    if (a) tail->next = a;
+    if (b) tail->next = b;
+
+    return result;
+}
+
+
+
+//Aksinya
+
+
+
+
 
 int main() {
     setlocale(LC_ALL, "Russian");
