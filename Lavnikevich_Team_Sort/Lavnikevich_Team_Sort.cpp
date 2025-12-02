@@ -202,13 +202,18 @@ Node<T>* listInsertionSort(Node<T>* head) {
     while (head) {
         Node<T>* current = head;
         head = head->next;
+        current->next = nullptr;
 
-        if (!sorted || current->data <= sorted->data) {
+        if (!sorted) {
+            sorted = current;
+        }
+        else if (current->data <= sorted->data) {
             current->next = sorted;
             sorted = current;
         }
         else {
             Node<T>* temp = sorted;
+
             while (temp->next && temp->next->data < current->data) {
                 temp = temp->next;
             }
@@ -219,6 +224,7 @@ Node<T>* listInsertionSort(Node<T>* head) {
 
     return sorted;
 }
+
 // Ира
 
 
@@ -286,10 +292,10 @@ void generateDataFile(const string& filename, int type) {
     }
 
     case 4:
-        for (int i = 1000; i >= 1; i--) {
+        for (int i = 1; i <= 1000; i++) {
             file << i << " ";
         }
-        cout << "Создан файл data4.txt с 1000 чисел (1000..1)" << endl;
+        cout << "Создан файл data4.txt с 1000 чисел (уже отсортированный)" << endl;
         break;
 
     case 5:
@@ -309,7 +315,7 @@ void showMenu() {
     cout << "1. 1000 целых чисел (data1.txt)" << endl;
     cout << "2. 10000 целых чисел (data2.txt)" << endl;
     cout << "3. 1000 букв (data3.txt)" << endl;
-    cout << "4. 1000 чисел в обратном порядке (data4.txt)" << endl;
+    cout << "4. 1000 чисел отсортирванные (data4.txt)" << endl;
     cout << "5. 1000 дробных чисел (data5.txt)" << endl;
     cout << "6. Выход" << endl;
     cout << "Ваш выбор (1-6): ";
