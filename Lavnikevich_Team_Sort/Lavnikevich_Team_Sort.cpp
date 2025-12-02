@@ -3,10 +3,24 @@
 
 #include <iostream>
 #include <fstream>
-#include <list>
-using namespace std;
+#include <string>
+#include <ctime>
+#include <chrono>
 
-int main()
-{
-    
+using namespace std;
+using namespace std::chrono;
+
+template <typename T>
+struct Node {
+    T data;
+    Node* next;
+    Node(T value) : data(value), next(nullptr) {}
+};
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+
+
+
+    return 0;
 }
