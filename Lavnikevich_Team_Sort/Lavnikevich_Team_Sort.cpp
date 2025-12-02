@@ -139,7 +139,32 @@ Node<T>* merge(Node<T>* a, Node<T>* b) {
 
 
 //Ира
+template <typename T>
+Node<T>* listInsertionSort(Node<T>* head) {
+    if (!head || !head->next) return head;
 
+    Node<T>* sorted = nullptr;
+
+    while (head) {
+        Node<T>* current = head;
+        head = head->next;
+
+        if (!sorted || current->data <= sorted->data) {
+            current->next = sorted;
+            sorted = current;
+        }
+        else {
+            Node<T>* temp = sorted;
+            while (temp->next && temp->next->data < current->data) {
+                temp = temp->next;
+            }
+            current->next = temp->next;
+            temp->next = current;
+        }
+    }
+
+    return sorted;
+}
 // Ира
 
 
