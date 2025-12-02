@@ -224,6 +224,30 @@ Node<T>* listInsertionSort(Node<T>* head) {
 
 // Анжелика
 
+template <typename T>
+Node<T>* polyphaseMergeSort(Node<T>* head) {
+    if (!head || !head->next) return head;
+
+    // Разделяем пополам
+    Node<T>* slow = head;
+    Node<T>* fast = head->next;
+
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    Node<T>* left = head;
+    Node<T>* right = slow->next;
+    slow->next = nullptr;
+
+    // Рекурсивно сортируем
+    left = polyphaseMergeSort(left);
+    right = polyphaseMergeSort(right);
+
+    // Сливаем
+    return merge(left, right);
+}
 // Анжелика
 
 
@@ -323,7 +347,8 @@ int main() {
                 cout << "\nРезультаты сортировок:" << endl;
                 testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
-
+                testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
+                
                 freeList(head);
             }
             else if (choice == 5) {
@@ -339,6 +364,7 @@ int main() {
                 cout << "\nРезультаты сортировок:" << endl;
                 testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
+                testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
 
                 freeList(head);
             }
@@ -355,6 +381,7 @@ int main() {
                 cout << "\nРезультаты сортировок:" << endl;
                 testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
+                testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
 
                 freeList(head);
             }
