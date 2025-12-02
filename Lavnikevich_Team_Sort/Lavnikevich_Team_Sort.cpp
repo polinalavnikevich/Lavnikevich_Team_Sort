@@ -57,6 +57,31 @@ void printList(Node<T>* head, int limit = 10) {
     cout << endl;
 }
 
+template <typename T>
+void freeList(Node<T>* head) {
+    while (head) {
+        Node<T>* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+template <typename T>
+Node<T>* copyList(Node<T>* head) {
+    Node<T>* newHead = nullptr;
+    Node<T>* tail = nullptr;
+
+    while (head) {
+        Node<T>* newNode = new Node<T>(head->data);
+        if (!newHead) newHead = newNode;
+        else tail->next = newNode;
+        tail = newNode;
+        head = head->next;
+    }
+
+    return newHead;
+}
+
 int main() {
     setlocale(LC_ALL, "Russian");
 
