@@ -133,7 +133,61 @@ Node<T>* merge(Node<T>* a, Node<T>* b) {
     return result;
 }
 
+template <typename T>
+Node<T>* naturalMergeSort(Node<T>* head) {
+    if (!head || !head->next) return head;
 
+    while (true) {
+        Node<T>* current = head;
+        Node<T>* result = nullptr;
+        Node<T>* tail = nullptr;
+
+        while (current) {
+            // Первый подсписок
+            Node<T>* sub1 = current;
+            Node<T>* prev = current;
+            current = current->next;
+
+            while (current && prev->data <= current->data) {
+                prev = current;
+                current = current->next;
+            }
+            prev->next = nullptr;
+
+            if (!current) {
+                if (!result) result = sub1;
+                else tail->next = sub1;
+                break;
+            }
+
+            // Второй подсписок
+            Node<T>* sub2 = current;
+            prev = current;
+            current = current->next;
+
+            while (current && prev->data <= current->data) {
+                prev = current;
+                current = current->next;
+            }
+            prev->next = nullptr;
+
+            // Слияние
+            Node<T>* merged = merge(sub1, sub2);
+
+            if (!result) result = merged;
+            else tail->next = merged;
+
+            // Найти конец
+            tail = merged;
+            while (tail->next) tail = tail->next;
+        }
+
+        head = result;
+        if (isSorted(head)) break;
+    }
+
+    return head;
+}
 
 //Aksinya
 
@@ -178,7 +232,6 @@ Node<T>* listInsertionSort(Node<T>* head) {
 // Даня
 
 
-// Генерация тестовых данных
 void generateDataFile(const string& filename, int type) {
     ofstream file(filename);
     srand(time(0));
@@ -238,7 +291,6 @@ void showMenu() {
     cout << "Ваш выбор (1-6): ";
 }
 
-
 int main() {
     setlocale(LC_ALL, "Russian");
     int choice;
@@ -256,7 +308,7 @@ int main() {
             string filename = filenames[choice - 1];
             string desc = descriptions[choice - 1];
 
-            cout << "Тест: " << desc << endl;
+            cout << "\nТест: " << desc << endl;
 
             if (choice == 3) {
                 Node<string>* head = readFromFile<string>(filename);
@@ -269,6 +321,7 @@ int main() {
                 printList(head);
 
                 cout << "\nРезультаты сортировок:" << endl;
+                testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
 
                 freeList(head);
@@ -284,11 +337,12 @@ int main() {
                 printList(head);
 
                 cout << "\nРезультаты сортировок:" << endl;
+                testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
 
                 freeList(head);
             }
-            else { // целые числа
+            else {
                 Node<int>* head = readFromFile<int>(filename);
                 if (!head) {
                     cout << "Файл не найден! Данные будут сгенерированы." << endl;
@@ -299,6 +353,7 @@ int main() {
                 printList(head);
 
                 cout << "\nРезультаты сортировок:" << endl;
+                testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
 
                 freeList(head);
