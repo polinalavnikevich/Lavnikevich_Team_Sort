@@ -6,6 +6,7 @@
 #include <string>
 #include <ctime>
 #include <chrono>
+#include <limits>
 
 using namespace std;
 using namespace std::chrono;
@@ -365,13 +366,23 @@ void showMenu() {
     cout << "Ваш выбор (1-6): ";
 }
 
+
+
 int main() {
     setlocale(LC_ALL, "Russian");
     int choice;
 
     do {
         showMenu();
-        cin >> choice;
+
+        if (!(cin >> choice)) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "\nОшибка ввода! Пожалуйста, введите число от 1 до 6." << endl;
+            continue;
+        }
+
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
         if (choice >= 1 && choice <= 5) {
             string filenames[] = { "data1.txt", "data2.txt", "data3.txt", "data4.txt", "data5.txt" };
@@ -399,7 +410,7 @@ int main() {
                 testSort("2. Insertion Sort", listInsertionSort, head);
                 testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
                 testSort("4. Strand Sort", strandSort, head);
-                
+
                 freeList(head);
             }
             else if (choice == 5) {
@@ -443,7 +454,7 @@ int main() {
             cout << "\nВыход из программы..." << endl;
         }
         else {
-            cout << "Неверный выбор! Введите число от 1 до 6." << endl;
+            cout << "\nНеверный выбор! Введите число от 1 до 6." << endl;
         }
 
     } while (choice != 6);
