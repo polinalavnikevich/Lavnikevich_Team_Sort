@@ -259,6 +259,50 @@ Node<T>* polyphaseMergeSort(Node<T>* head) {
 
 // Даня
 
+template <typename T>
+Node<T>* strandSort(Node<T>* head) {
+    if (!head || !head->next) return head;
+
+    Node<T>* result = nullptr;
+
+    while (head) {
+        Node<T>* strand = head;
+        Node<T>* strandTail = head;
+        head = head->next;
+        strandTail->next = nullptr;
+
+        Node<T>* prev = strandTail;
+        Node<T>* curr = head;
+        Node<T>* prevCurr = nullptr;
+
+        while (curr) {
+            if (curr->data >= strandTail->data) {
+                strandTail->next = curr;
+                strandTail = curr;
+
+                if (prevCurr) prevCurr->next = curr->next;
+                else head = curr->next;
+
+                curr = curr->next;
+                strandTail->next = nullptr;
+            }
+            else {
+                prevCurr = curr;
+                curr = curr->next;
+            }
+        }
+
+        if (!result) {
+            result = strand;
+        }
+        else {
+            result = merge(result, strand);
+        }
+    }
+
+    return result;
+}
+
 // Даня
 
 
@@ -354,6 +398,7 @@ int main() {
                 testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
                 testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
+                testSort("4. Strand Sort", strandSort, head);
                 
                 freeList(head);
             }
@@ -371,6 +416,7 @@ int main() {
                 testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
                 testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
+                testSort("4. Strand Sort", strandSort, head);
 
                 freeList(head);
             }
@@ -388,6 +434,7 @@ int main() {
                 testSort("1. Natural Merge Sort", naturalMergeSort, head);
                 testSort("2. Insertion Sort", listInsertionSort, head);
                 testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
+                testSort("4. Strand Sort", strandSort, head);
 
                 freeList(head);
             }
