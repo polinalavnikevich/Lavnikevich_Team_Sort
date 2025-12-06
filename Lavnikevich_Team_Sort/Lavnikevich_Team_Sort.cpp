@@ -306,67 +306,37 @@ Node<T>* strandSort(Node<T>* head) {
 
 // Даня
 
-
-void generateDataFile(const string& filename, int type) {
-    ofstream file(filename);
-    srand(time(0));
-
-    switch (type) {
-    case 1:
-        for (int i = 0; i < 1000; i++) {
-            file << rand() % 10000 - 5000 << " ";
-        }
-        cout << "Создан файл data1.txt с 1000 целых чисел" << endl;
-        break;
-
-    case 2:
-        for (int i = 0; i < 10000; i++) {
-            file << rand() % 10000 - 5000 << " ";
-        }
-        cout << "Создан файл data2.txt с 10000 целых чисел" << endl;
-        break;
-
-    case 3:
-    {
-        for (int i = 0; i < 1000; i++) {
-            char letter = 'a' + rand() % 26;
-            file << letter << " ";
-        }
-        cout << "Создан файл data3.txt с 1000 английских букв" << endl;
-        break;
-    }
-
-    case 4:
-        for (int i = 1; i <= 1000; i++) {
-            file << i << " ";
-        }
-        cout << "Создан файл data4.txt с 1000 чисел (уже отсортированный)" << endl;
-        break;
-
-    case 5:
-        for (int i = 0; i < 1000; i++) {
-            float val = (rand() % 10000 - 5000) / 100.0f;
-            file << val << " ";
-        }
-        cout << "Создан файл data5.txt с 1000 дробных чисел" << endl;
-        break;
-    }
-
-    file.close();
-}
-
 void showMenu() {
     cout << "\nТЕСТИРОВАНИЕ СОРТИРОВОК НА СПИСКАХ" << endl;
-    cout << "1. 1000 целых чисел (data1.txt)" << endl;
-    cout << "2. 10000 целых чисел (data2.txt)" << endl;
-    cout << "3. 1000 букв (data3.txt)" << endl;
-    cout << "4. 1000 чисел отсортирванные (data4.txt)" << endl;
-    cout << "5. 1000 дробных чисел (data5.txt)" << endl;
-    cout << "6. Выход" << endl;
-    cout << "Ваш выбор (1-6): ";
+    cout << "1. Тестировать файл с любыми данными" << endl;
+    cout << "2. Выход" << endl;
+    cout << "Ваш выбор (1-2): ";
 }
 
+template<typename T>
+void testAllSorts(const string& filename, Node<T>* head) {
+    cout << "Первые 10 элементов: ";
+    printList(head);
 
+    cout << "\nРезультаты сортировок:" << endl;
+    testSort("1. Natural Merge Sort", naturalMergeSort, head);
+    testSort("2. Insertion Sort", listInsertionSort, head);
+    testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
+    testSort("4. Strand Sort", strandSort, head);
+
+    freeList(head);
+}
+
+template<typename T>
+bool tryTestFile(const string& filename) {
+    Node<T>* head = readFromFile<T>(filename);
+    if (head) {
+        cout << "\nФайл прочитан успешно." << endl;
+        testAllSorts(filename, head);
+        return true;
+    }
+    return false;
+}
 
 int main() {
     setlocale(LC_ALL, "Russian");
@@ -378,86 +348,32 @@ int main() {
         if (!(cin >> choice)) {
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
-            cout << "\nОшибка ввода! Пожалуйста, введите число от 1 до 6." << endl;
+            cout << "\nОшибка ввода! Пожалуйста, введите число от 1 до 2." << endl;
             continue;
         }
 
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
 
-        if (choice >= 1 && choice <= 5) {
-            string filenames[] = { "data1.txt", "data2.txt", "data3.txt", "data4.txt", "data5.txt" };
-            string descriptions[] = { "1000 целых чисел", "10000 целых чисел",
-                                    "1000 букв", "1000 чисел в обратном порядке",
-                                    "1000 дробных чисел" };
+        if (choice == 1) {
+            string filename;
+            cout << "\nВведите имя файла для тестирования: ";
+            getline(cin, filename);
 
-            string filename = filenames[choice - 1];
-            string desc = descriptions[choice - 1];
-
-            cout << "\nТест: " << desc << endl;
-
-            if (choice == 3) {
-                Node<string>* head = readFromFile<string>(filename);
-                if (!head) {
-                    cout << "Файл не найден! Данные будут сгенерированы." << endl;
-                    generateDataFile(filename, choice);
-                    head = readFromFile<string>(filename);
-                }
-                cout << "Первые 10 элементов: ";
-                printList(head);
-
-                cout << "\nРезультаты сортировок:" << endl;
-                testSort("1. Natural Merge Sort", naturalMergeSort, head);
-                testSort("2. Insertion Sort", listInsertionSort, head);
-                testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
-                testSort("4. Strand Sort", strandSort, head);
-
-                freeList(head);
-            }
-            else if (choice == 5) {
-                Node<float>* head = readFromFile<float>(filename);
-                if (!head) {
-                    cout << "Файл не найден! Данные будут сгенерированы." << endl;
-                    generateDataFile(filename, choice);
-                    head = readFromFile<float>(filename);
-                }
-                cout << "Первые 10 элементов: ";
-                printList(head);
-
-                cout << "\nРезультаты сортировок:" << endl;
-                testSort("1. Natural Merge Sort", naturalMergeSort, head);
-                testSort("2. Insertion Sort", listInsertionSort, head);
-                testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
-                testSort("4. Strand Sort", strandSort, head);
-
-                freeList(head);
+            if (tryTestFile<int>(filename) || tryTestFile<float>(filename) ||tryTestFile<string>(filename)) {
             }
             else {
-                Node<int>* head = readFromFile<int>(filename);
-                if (!head) {
-                    cout << "Файл не найден! Данные будут сгенерированы." << endl;
-                    generateDataFile(filename, choice);
-                    head = readFromFile<int>(filename);
-                }
-                cout << "Первые 10 элементов: ";
-                printList(head);
-
-                cout << "\nРезультаты сортировок:" << endl;
-                testSort("1. Natural Merge Sort", naturalMergeSort, head);
-                testSort("2. Insertion Sort", listInsertionSort, head);
-                testSort("3. Polyphase Merge Sort", polyphaseMergeSort, head);
-                testSort("4. Strand Sort", strandSort, head);
-
-                freeList(head);
+                cout << "\nНе удалось прочитать файл." << endl;
             }
+
         }
-        else if (choice == 6) {
+        else if (choice == 2) {
             cout << "\nВыход из программы..." << endl;
         }
         else {
-            cout << "\nНеверный выбор! Введите число от 1 до 6." << endl;
+            cout << "\nНеверный выбор! Введите число от 1 до 2." << endl;
         }
 
-    } while (choice != 6);
+    } while (choice != 2);
 
     return 0;
 }
